@@ -1,0 +1,117 @@
+services:
+  zookeper:
+    image: confluentinc/cp-zookeeper:5.5.0
+    ports:
+      - "2181:2181"
+    container_name: name_zookeper
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      # ZOOKEEPER_SYNC_LIMIT: 2
+      # ZOOKEEPER_SERVER_ID: 1
+      # ZOOKEEPER_SERVERS: "zookeeper:2888:3888"
+  kafka-server:
+      image: confluentinc/cp-kafka:5.5.0
+      ports:
+        - "9092:9092"
+      container_name: kafka-server
+      depends_on:
+        - zookeper
+      environment:
+        KAFKA_BROKER_ID: 1
+        KAFKA_ZOOKEEPER_CONNECT: zookeper:2181
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server:9092
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+  kafka-server2:
+      image: confluentinc/cp-kafka:5.5.0
+      ports:
+        - "9093:9092"
+      container_name: kafka-server2
+      depends_on:
+        - zookeper
+      environment:
+        KAFKA_BROKER_ID: 2
+        KAFKA_ZOOKEEPER_CONNECT: zookeper:2181
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server2:9092
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  
+  kafka-server3:
+      image: confluentinc/cp-kafka:5.5.0
+      ports:
+        - "9094:9092"
+      container_name: kafka-server3
+      depends_on:
+        - zookeper
+      environment:
+        KAFKA_BROKER_ID: 3
+        KAFKA_ZOOKEEPER_CONNECT: zookeper:2181
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server3:9092
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  producer:
+    build: producer
+    container_name: name_producer
+    depends_on:
+      - kafka-server
+    environment:
+      KAFKA_BROKERCONNECT: kafka-server:9092
+      KAFKA_TOPIC: x
+      MONGODB_DB: meydb
+      MONGODB_COLLECTION: kafka 
+    volumes:
+      - ./producer/app-a.py:/producer.py
+          
+    restart: always
+
+  consumer-1:
+    build: consumer
+    container_name: name_consumer1
+    depends_on:
+      - kafka-server
+    environment:
+      ID: 1
+      KAFKA_BROKERCONNECT: kafka-server:9092
+      KAFKA_TOPIC: x
+    volumes:
+      - ./consumer/app-b.py:/consumer.py
+    restart: always
+
+  consumer-2:
+    build: consumer
+    container_name: name_consumer2
+    depends_on:
+      - kafka-server2
+    environment:
+      ID: 2
+      KAFKA_BROKERCONNECT: kafka-server2:9092
+      KAFKA_TOPIC: x
+    volumes:
+      - ./consumer/app-b.py:/consumer.py
+    restart: always
+
+  consumer-3:
+    build: consumer
+    container_name: name_consumer3
+    depends_on:
+      - kafka-server3
+    environment:
+      ID: 3
+      KAFKA_BROKERCONNECT: kafka-server3:9092
+      KAFKA_TOPIC: x
+    volumes:
+      - ./consumer/app-b.py:/consumer.py
+    restart: always 
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27020:27017"
+
+    
