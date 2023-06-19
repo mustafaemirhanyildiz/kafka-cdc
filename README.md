@@ -3,7 +3,6 @@
 
 # Introduction
 This project focuses on building a simple Change Data Capture (CDC) application using Apache Kafka. CDC is a technique used to capture and propagate data changes in a database in real-time.
-Apache Kafka ile Basit CDC Uygulaması Geliştirme Projesi
 
 # Project Description
 The project consists of the following components:
