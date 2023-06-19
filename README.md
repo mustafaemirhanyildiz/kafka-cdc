@@ -23,7 +23,7 @@ To set up the project, follow the steps mentioned below:
 
 -Navigate to the project directory using the command line or terminal.
 
--Run the command docker compose up to start the required services (Kafka and MongoDB).
+-Run the command "docker compose up" to start the required services (Kafka and MongoDB).
 
 -Wait for 15-20 seconds to allow the services to start successfully.
 
