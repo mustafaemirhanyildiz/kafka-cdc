@@ -3,21 +3,21 @@ from kafka import KafkaProducer
 import json
 import time
 import os 
-# MongoDB bağlantı bilgilerini güncelleyin
+# Update connection information for MongoDB
 mongo_host = "mongodb://mongo:27017/"
 mongo_db = os.environ["MONGODB_DB"]
 mongo_collection = os.environ["MONGODB_COLLECTION"]
 
-# Kafka bağlantı bilgilerini güncelleyin
+# Update connection information for Kafka
 kafka_bootstrap_servers = os.environ["KAFKA_BROKERCONNECT"]
 kafka_topic = os.environ["KAFKA_TOPIC"]
 
-# MongoDB'ye bağlanın
+# Connect to MongoDB
 mongo_client = MongoClient(mongo_host)
 db = mongo_client[mongo_db]
 collection = db[mongo_collection]
 
-# Kafka producer'ını yapılandırın
+
 producer = KafkaProducer(bootstrap_servers=kafka_bootstrap_servers)
 
 
@@ -26,15 +26,15 @@ last_count = collection.count_documents({})
 sendJustOne = True
 
 while True:
-    #  5 saniye bekle
+    #  wait 5 seconds
     time.sleep(5)
 
-    # şuan ki doküman sayısını al 
+    # get current count of documents
     current_count = collection.count_documents({})
 
-    # doküman sayısını karşılaştır
+    # compare current count with last count
     if current_count > last_count:
-        # yeni dokümanlar varsa, dokümanları Kafka'ya gönder
+        # if new documents are inserted, send them to kafka
         new_documents = collection.find().skip(last_count)
         for document in new_documents:
             if(sendJustOne):

@@ -1,11 +1,11 @@
 from kafka import KafkaConsumer
 import os 
-# Kafka bağlantı bilgilerini güncelleyin
+# Update connection information for Kafka
 kafka_bootstrap_servers = os.environ["KAFKA_BROKERCONNECT"]
 kafka_topic =os.environ["KAFKA_TOPIC"]
 kafka_group_id = "mygroup"+ os.environ["ID"]
 
-# Kafka consumer'ını yapılandırın
+# Connect to Kafka
 
 consumer = KafkaConsumer( 
     kafka_topic,
@@ -15,10 +15,10 @@ consumer = KafkaConsumer(
 
 
 while True:
-    # Kafka'dan mesajları al
+    # Get all messages from Kafka
     for message in consumer:
-         # Mesajı konsola yazdır
-        print("Alınan Mesaj: {}".format(message.value.decode("utf-8")))
+         # print the message
+        print("Recieve message: {}".format(message.value.decode("utf-8")))
 
 
     
