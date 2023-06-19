@@ -1,4 +1,4 @@
-# Kafka CDC  [EN - TR]
+# Kafka CDC  
 
 
 # Introduction
