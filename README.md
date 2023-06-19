@@ -3,7 +3,7 @@ Apache Kafka ile Basit CDC Uygulaması Geliştirme Projesi
 
 - projeyi locale klonlayın
 - klasör dizinine gidip terminale "docker compose up" yazın
-- 15-20 saniye bekleyin ardından MongoDB Atlas'ı açın
+- 15-20 saniye bekleyin ardından MongoDB Compass'ı açın
 - mongodb://localhost:27020 adresine bağlanın
 - meydb adlı veri tabanını oluşturun ve kafka adlı collection'ı oluşturun
 - ardınan veri tabanına veri eklediğinizde producer bu veriyi kafka server'a gönderecek
